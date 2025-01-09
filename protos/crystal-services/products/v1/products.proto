@@ -62,13 +62,21 @@ message Product {
     uint32 count_on_warehouse = 6;
 }
 
+message ProductBody {
+    string product_name = 1;
+    string company_name = 2;
+    float client_price = 3;
+    float purchase_price = 4;
+    uint32 count_on_warehouse = 5;
+}
+
 message Products {
     repeated Product products = 1;
 }
 
 message ProductPutRequest {
     uint64 id = 1;
-    Product product = 2;
+    ProductBody product = 2;
 }
 
 message ProductId {

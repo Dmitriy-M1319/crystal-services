@@ -175,7 +175,7 @@
       "type": "object",
       "properties": {
         "product": {
-          "$ref": "#/definitions/v1Product"
+          "$ref": "#/definitions/v1ProductBody"
         }
       }
     },
@@ -217,6 +217,29 @@
           "type": "string",
           "format": "uint64"
         },
+        "productName": {
+          "type": "string"
+        },
+        "companyName": {
+          "type": "string"
+        },
+        "clientPrice": {
+          "type": "number",
+          "format": "float"
+        },
+        "purchasePrice": {
+          "type": "number",
+          "format": "float"
+        },
+        "countOnWarehouse": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "v1ProductBody": {
+      "type": "object",
+      "properties": {
         "productName": {
           "type": "string"
         },
