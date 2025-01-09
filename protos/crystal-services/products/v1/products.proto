@@ -4,6 +4,8 @@ package products.v1;
 option go_package = "github.com/Dmitriy-M1319/crystal-services/pkg/crystal-services/products;products";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
+// TODO: Добавить валидатор данных
+
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
       title: "Products Service";

@@ -9,10 +9,19 @@ type Product struct {
 	CountOnWarehouse uint32  `db:"count_on_warehouse"`
 }
 
-func FilterByCompany(products []Product, name string) []Product {
+type CompanyNameFilter struct {
+	Name string
+}
+
+type ClientPriceFilter struct {
+	From float32
+	To   float32
+}
+
+func FilterByCompany(products []Product, filter *CompanyNameFilter) []Product {
 	result := make([]Product, 0)
 	for _, p := range products {
-		if p.CompanyName == name {
+		if p.CompanyName == filter.Name {
 			result = append(result, p)
 		}
 	}
@@ -20,10 +29,10 @@ func FilterByCompany(products []Product, name string) []Product {
 	return result
 }
 
-func FilterByPrice(products []Product, from, to float32) []Product {
+func FilterByPrice(products []Product, filter *ClientPriceFilter) []Product {
 	result := make([]Product, 0)
 	for _, p := range products {
-		if p.ClientPrice >= from && p.ClientPrice <= to {
+		if p.ClientPrice >= filter.From && p.ClientPrice <= filter.From {
 			result = append(result, p)
 		}
 	}
