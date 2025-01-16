@@ -37,6 +37,28 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "price.from",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "float"
+          },
+          {
+            "name": "price.to",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "float"
+          }
+        ],
         "tags": [
           "ProductsService"
         ]
@@ -257,6 +279,19 @@
         "countOnWarehouse": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "v1ProductPriceFilter": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "number",
+          "format": "float"
+        },
+        "to": {
+          "type": "number",
+          "format": "float"
         }
       }
     },

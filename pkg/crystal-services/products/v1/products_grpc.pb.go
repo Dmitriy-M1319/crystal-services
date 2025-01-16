@@ -17,7 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductsServiceClient interface {
-	GetProducts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Products, error)
+	GetProducts(ctx context.Context, in *ProductFilters, opts ...grpc.CallOption) (*Products, error)
 	GetProductById(ctx context.Context, in *ProductId, opts ...grpc.CallOption) (*Product, error)
 	InsertProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*Product, error)
 	UpdateProduct(ctx context.Context, in *ProductPutRequest, opts ...grpc.CallOption) (*Product, error)
@@ -32,7 +32,7 @@ func NewProductsServiceClient(cc grpc.ClientConnInterface) ProductsServiceClient
 	return &productsServiceClient{cc}
 }
 
-func (c *productsServiceClient) GetProducts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Products, error) {
+func (c *productsServiceClient) GetProducts(ctx context.Context, in *ProductFilters, opts ...grpc.CallOption) (*Products, error) {
 	out := new(Products)
 	err := c.cc.Invoke(ctx, "/products.v1.ProductsService/GetProducts", in, out, opts...)
 	if err != nil {
@@ -81,7 +81,7 @@ func (c *productsServiceClient) DeleteProduct(ctx context.Context, in *ProductId
 // All implementations must embed UnimplementedProductsServiceServer
 // for forward compatibility
 type ProductsServiceServer interface {
-	GetProducts(context.Context, *Empty) (*Products, error)
+	GetProducts(context.Context, *ProductFilters) (*Products, error)
 	GetProductById(context.Context, *ProductId) (*Product, error)
 	InsertProduct(context.Context, *Product) (*Product, error)
 	UpdateProduct(context.Context, *ProductPutRequest) (*Product, error)
@@ -93,7 +93,7 @@ type ProductsServiceServer interface {
 type UnimplementedProductsServiceServer struct {
 }
 
-func (UnimplementedProductsServiceServer) GetProducts(context.Context, *Empty) (*Products, error) {
+func (UnimplementedProductsServiceServer) GetProducts(context.Context, *ProductFilters) (*Products, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProducts not implemented")
 }
 func (UnimplementedProductsServiceServer) GetProductById(context.Context, *ProductId) (*Product, error) {
@@ -122,7 +122,7 @@ func RegisterProductsServiceServer(s *grpc.Server, srv ProductsServiceServer) {
 }
 
 func _ProductsService_GetProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(ProductFilters)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func _ProductsService_GetProducts_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/products.v1.ProductsService/GetProducts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductsServiceServer).GetProducts(ctx, req.(*Empty))
+		return srv.(ProductsServiceServer).GetProducts(ctx, req.(*ProductFilters))
 	}
 	return interceptor(ctx, in, info, handler)
 }

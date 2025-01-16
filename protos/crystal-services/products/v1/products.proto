@@ -19,7 +19,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service ProductsService {
-    rpc GetProducts(Empty) returns (Products) {
+    rpc GetProducts(ProductFilters) returns (Products) {
         option (google.api.http) = {
             get: "/v1/products"
         };
@@ -53,6 +53,16 @@ service ProductsService {
 }
 
 message Empty {
+}
+
+message ProductFilters {
+    string name = 1;
+    ProductPriceFilter price = 2;
+}
+
+message ProductPriceFilter {
+    float from = 1;
+    float to = 2;
 }
 
 message Product {
