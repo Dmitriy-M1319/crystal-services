@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"github.com/Dmitriy-M1319/crystal-services/internal/products/service/products"
@@ -41,9 +42,20 @@ func (repo *ProductRepositoryImpl) InsertProduct(ctx context.Context, product *p
 	query := `INSERT INTO products(product_name, company_name, client_price, purchase_price, count_on_warehouse)
 			VALUES($1, $2, $3, $4, $5) RETURNING id`
 	newId := 0
-	err := repo.connection.GetContext(ctx, &newId, query, product.ProductName, product.CompanyName,
-		product.ClientPrice, product.PurchasePrice, product.CountOnWarehouse)
 
+	tx, err := repo.connection.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return fmt.Errorf("failed to insert product: %s", err)
+	}
+
+	err = tx.QueryRowContext(ctx, query, product.ProductName, product.CompanyName,
+		product.ClientPrice, product.PurchasePrice, product.CountOnWarehouse).Scan(&newId)
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("failed to insert product: %s", err)
+	}
+
+	err = tx.Commit()
 	if err != nil {
 		return fmt.Errorf("failed to insert product: %s", err)
 	}
@@ -60,9 +72,20 @@ func (repo *ProductRepositoryImpl) UpdateProduct(ctx context.Context, id uint64,
 
 	query := `UPDATE products SET product_name=$1 company_name=$2 client_price=$3 purchase_price=$4 count_on_warehouse=$5
 			WHERE id = $6`
-	_, err = repo.connection.ExecContext(ctx, query, product.ProductName, product.CompanyName,
-		product.ClientPrice, product.PurchasePrice, product.CountOnWarehouse, id)
 
+	tx, err := repo.connection.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return fmt.Errorf("failed to update product: %s", err)
+	}
+
+	_, err = tx.ExecContext(ctx, query, product.ProductName, product.CompanyName,
+		product.ClientPrice, product.PurchasePrice, product.CountOnWarehouse, id)
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("failed to update product: %s", err)
+	}
+
+	err = tx.Commit()
 	if err != nil {
 		return fmt.Errorf("failed to update product: %s", err)
 	}
@@ -76,10 +99,19 @@ func (repo *ProductRepositoryImpl) DeleteProduct(ctx context.Context, id uint64)
 	}
 
 	query := "DELETE FROM products WHERE id = $1"
-	_, err = repo.connection.ExecContext(ctx, query, id)
+	tx, err := repo.connection.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return fmt.Errorf("failed to delete product: %s", err)
 	}
+	_, err = tx.ExecContext(ctx, query, id)
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("failed to delete product: %s", err)
+	}
 
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("failed to delete product: %s", err)
+	}
 	return nil
 }

@@ -7,7 +7,7 @@ import (
 	pb "github.com/Dmitriy-M1319/crystal-services/pkg/crystal-services/products/v1"
 )
 
-func (pImpl *ProductsApiImplementation) GetProducts(ctx context.Context, in *pb.ProductFilters) (*pb.Products, error) {
+func (pImpl *ApiProductsImplementation) GetProducts(ctx context.Context, in *pb.ProductFilters) (*pb.Products, error) {
 	var nameFilter *products.CompanyNameFilter = nil
 	var priceFilter *products.ClientPriceFilter = nil
 	if len(in.Name) > 0 {
@@ -17,13 +17,13 @@ func (pImpl *ProductsApiImplementation) GetProducts(ctx context.Context, in *pb.
 		priceFilter = &products.ClientPriceFilter{From: in.Price.From, To: in.Price.To}
 	}
 
-	products, err := pImpl.service.GetAllProducts(ctx, nameFilter, priceFilter)
+	productsList, err := pImpl.service.GetAllProducts(ctx, nameFilter, priceFilter)
 	if err != nil {
 		return nil, err
 	}
 
-	res := make([]*pb.Product, len(products))
-	for i, p := range products {
+	res := make([]*pb.Product, len(productsList))
+	for i, p := range productsList {
 		var pr = &pb.Product{
 			Id:               p.ID,
 			ProductName:      p.ProductName,
@@ -38,7 +38,7 @@ func (pImpl *ProductsApiImplementation) GetProducts(ctx context.Context, in *pb.
 	return &pb.Products{Products: res}, nil
 }
 
-func (pImpl *ProductsApiImplementation) GetProductById(ctx context.Context, in *pb.ProductId) (*pb.Product, error) {
+func (pImpl *ApiProductsImplementation) GetProductById(ctx context.Context, in *pb.ProductId) (*pb.Product, error) {
 	product, err := pImpl.service.GetProduct(ctx, in.Id)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (pImpl *ProductsApiImplementation) GetProductById(ctx context.Context, in *
 	return result, nil
 }
 
-func (pImpl *ProductsApiImplementation) InsertProduct(ctx context.Context, in *pb.Product) (*pb.Product, error) {
+func (pImpl *ApiProductsImplementation) InsertProduct(ctx context.Context, in *pb.Product) (*pb.Product, error) {
 	inProduct := &products.Product{
 		ID:               in.Id,
 		ProductName:      in.ProductName,
@@ -75,7 +75,7 @@ func (pImpl *ProductsApiImplementation) InsertProduct(ctx context.Context, in *p
 	return in, nil
 }
 
-func (pImpl *ProductsApiImplementation) UpdateProduct(ctx context.Context, in *pb.ProductPutRequest) (*pb.Product, error) {
+func (pImpl *ApiProductsImplementation) UpdateProduct(ctx context.Context, in *pb.ProductPutRequest) (*pb.Product, error) {
 	inProduct := &products.Product{
 		ID:               in.Id,
 		ProductName:      in.Product.ProductName,
@@ -101,7 +101,7 @@ func (pImpl *ProductsApiImplementation) UpdateProduct(ctx context.Context, in *p
 	return result, nil
 }
 
-func (pImpl *ProductsApiImplementation) DeleteProduct(ctx context.Context, in *pb.ProductId) (*pb.Empty, error) {
+func (pImpl *ApiProductsImplementation) DeleteProduct(ctx context.Context, in *pb.ProductId) (*pb.Empty, error) {
 	err := pImpl.service.DeleteProduct(ctx, in.Id)
 
 	if err != nil {

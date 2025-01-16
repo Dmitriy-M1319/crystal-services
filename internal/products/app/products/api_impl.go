@@ -5,11 +5,11 @@ import (
 	desc "github.com/Dmitriy-M1319/crystal-services/pkg/crystal-services/products/v1"
 )
 
-type ProductsApiImplementation struct {
+type ApiProductsImplementation struct {
 	desc.UnimplementedProductsServiceServer
 	service products.Service
 }
 
-func NewProductsApiImplementation(s products.Service) desc.ProductsServiceServer {
-	return &ProductsApiImplementation{service: s}
+func NewApiProductsImplementation(s products.Service) desc.ProductsServiceServer {
+	return &ApiProductsImplementation{service: s}
 }
