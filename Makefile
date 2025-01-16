@@ -1,4 +1,4 @@
-.PHONY: products_proto proto_clean
+.PHONY: products_proto proto_clean products_run
 
 products_proto:
 	protoc --experimental_allow_proto3_optional \
@@ -10,3 +10,5 @@ products_proto:
 		protos/crystal-services/products/v1/products.proto
 proto_clean:
 	rm -rf pkg/crystal-services
+products_run:
+	go run cmd/crystal-services/products/main.go -migration=false

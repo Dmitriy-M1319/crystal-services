@@ -1,0 +1,16 @@
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: 12345678
+  name: products
+  migrations: migrations/products
+
+grpc:
+  host: localhost
+  port: 12201
+  gatewayHost: localhost
+  gatewayPort: 8083
+  maxConnectionIdle: 5 # Minutes
+  timeout: 15 # Seconds
+  maxConnectionAge: 5 # Minutes

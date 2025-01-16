@@ -2,6 +2,7 @@ package products
 
 import (
 	"context"
+	"github.com/rs/zerolog/log"
 
 	"github.com/Dmitriy-M1319/crystal-services/internal/products/service/products"
 	pb "github.com/Dmitriy-M1319/crystal-services/pkg/crystal-services/products/v1"
@@ -19,6 +20,7 @@ func (pImpl *ApiProductsImplementation) GetProducts(ctx context.Context, in *pb.
 
 	productsList, err := pImpl.service.GetAllProducts(ctx, nameFilter, priceFilter)
 	if err != nil {
+		log.Error().Err(err).Msg("failed to get products")
 		return nil, err
 	}
 
@@ -35,12 +37,14 @@ func (pImpl *ApiProductsImplementation) GetProducts(ctx context.Context, in *pb.
 
 		res[i] = pr
 	}
+	log.Info().Msg("get products")
 	return &pb.Products{Products: res}, nil
 }
 
 func (pImpl *ApiProductsImplementation) GetProductById(ctx context.Context, in *pb.ProductId) (*pb.Product, error) {
 	product, err := pImpl.service.GetProduct(ctx, in.Id)
 	if err != nil {
+		log.Error().Err(err).Msg("failed to get product by id")
 		return nil, err
 	}
 
@@ -53,6 +57,7 @@ func (pImpl *ApiProductsImplementation) GetProductById(ctx context.Context, in *
 		CountOnWarehouse: product.CountOnWarehouse,
 	}
 
+	log.Info().Msg("get product by id")
 	return result, nil
 }
 
@@ -68,10 +73,12 @@ func (pImpl *ApiProductsImplementation) InsertProduct(ctx context.Context, in *p
 
 	err := pImpl.service.AddProduct(ctx, inProduct)
 	if err != nil {
+		log.Error().Err(err).Msg("failed to insert new product")
 		return nil, err
 	}
 
 	in.Id = inProduct.ID
+	log.Info().Msg("insert new product")
 	return in, nil
 }
 
@@ -87,6 +94,7 @@ func (pImpl *ApiProductsImplementation) UpdateProduct(ctx context.Context, in *p
 
 	err := pImpl.service.UpdateProduct(ctx, in.Id, inProduct)
 	if err != nil {
+		log.Error().Err(err)
 		return nil, err
 	}
 
@@ -98,6 +106,7 @@ func (pImpl *ApiProductsImplementation) UpdateProduct(ctx context.Context, in *p
 		PurchasePrice:    inProduct.PurchasePrice,
 		CountOnWarehouse: inProduct.CountOnWarehouse,
 	}
+	log.Info().Msg("update product")
 	return result, nil
 }
 
@@ -105,8 +114,10 @@ func (pImpl *ApiProductsImplementation) DeleteProduct(ctx context.Context, in *p
 	err := pImpl.service.DeleteProduct(ctx, in.Id)
 
 	if err != nil {
+		log.Error().Err(err)
 		return nil, err
 	} else {
+		log.Info().Msg("delete product")
 		return &pb.Empty{}, nil
 	}
 }

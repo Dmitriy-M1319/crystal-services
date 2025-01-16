@@ -7,9 +7,9 @@ import (
 
 type ApiProductsImplementation struct {
 	desc.UnimplementedProductsServiceServer
-	service products.Service
+	service *products.Service
 }
 
-func NewApiProductsImplementation(s products.Service) desc.ProductsServiceServer {
+func NewApiProductsImplementation(s *products.Service) desc.ProductsServiceServer {
 	return &ApiProductsImplementation{service: s}
 }

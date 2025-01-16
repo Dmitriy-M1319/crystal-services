@@ -20,7 +20,7 @@ func NewProductRepositoryImpl(db *sqlx.DB) *ProductRepositoryImpl {
 func (repo *ProductRepositoryImpl) GetProducts(ctx context.Context) ([]products.Product, error) {
 	query := "SELECT * FROM products ORDER BY id"
 	var result []products.Product
-	err := repo.connection.SelectContext(ctx, result, query)
+	err := repo.connection.SelectContext(ctx, &result, query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get products: %s", err)
 	}

@@ -8,9 +8,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DATABASE}
-      PGDATA: /data/postgres
     volumes:
-      - ./postgres:/data/postgres
+      - postgres:/data/postgres
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
@@ -33,6 +32,16 @@ services:
       - postgresql
     restart: unless-stopped
 
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - ./swagger:/docs
+    environment:
+      SWAGGER_JSON: /docs/crystal-services/products/v1/products.swagger.json
+
 networks:
   postgresql:
     driver: bridge
@@ -40,3 +49,5 @@ networks:
 volumes:
   postgres:
   pgadmin:
+
+
