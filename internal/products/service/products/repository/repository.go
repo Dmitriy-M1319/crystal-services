@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-
 	"github.com/Dmitriy-M1319/crystal-services/internal/products/service/products"
 	"github.com/jmoiron/sqlx"
 )

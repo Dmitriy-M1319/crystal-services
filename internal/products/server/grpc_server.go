@@ -51,6 +51,16 @@ func (srv *GrpcServer) Start(conf *config.Config) error {
 	isReady := &atomic.Value{}
 	isReady.Store(false)
 
+	statusServer := createStatusServer(conf, isReady)
+
+	go func() {
+		statusAdrr := fmt.Sprintf("%s:%v", conf.Status.Host, conf.Status.Port)
+		log.Info().Msgf("Status server is running on %s", statusAdrr)
+		if err := statusServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Error().Err(err).Msg("Failed running status server")
+		}
+	}()
+
 	l, err := net.Listen("tcp", grpcAddr)
 	if err != nil {
 		return fmt.Errorf("failed to listen: %w", err)
@@ -100,6 +110,12 @@ func (srv *GrpcServer) Start(conf *config.Config) error {
 		log.Error().Err(err).Msg("gatewayServer.Shutdown")
 	} else {
 		log.Info().Msg("gatewayServer shut down correctly")
+	}
+
+	if err := statusServer.Shutdown(ctx); err != nil {
+		log.Error().Err(err).Msg("statusServer.Shutdown")
+	} else {
+		log.Info().Msg("statusServer shut down correctly")
 	}
 
 	grpcServer.GracefulStop()

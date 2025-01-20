@@ -2,10 +2,9 @@ package products
 
 import (
 	"context"
-	"github.com/rs/zerolog/log"
-
 	"github.com/Dmitriy-M1319/crystal-services/internal/products/service/products"
 	pb "github.com/Dmitriy-M1319/crystal-services/pkg/crystal-services/products/v1"
+	"github.com/rs/zerolog/log"
 )
 
 func (pImpl *ApiProductsImplementation) GetProducts(ctx context.Context, in *pb.ProductFilters) (*pb.Products, error) {

@@ -35,10 +35,19 @@ type Grpc struct {
 	MaxConnectionAge  int64  `yaml:"maxConnectionAge"`
 }
 
+type Status struct {
+	Port          int    `yaml:"port"`
+	Host          string `yaml:"host"`
+	VersionPath   string `yaml:"versionPath"`
+	LivenessPath  string `yaml:"livenessPath"`
+	ReadinessPath string `yaml:"readinessPath"`
+}
+
 // Config - contains all configuration parameters in config package.
 type Config struct {
 	Database Database `yaml:"database"`
 	Grpc     Grpc     `yaml:"grpc"`
+	Status   Status   `yaml:"status"`
 }
 
 // ReadConfigYML - read configurations from file and init instance Config.
