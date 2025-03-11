@@ -41,3 +41,5 @@ require (
 	golang.org/x/text v0.21.0 // indirect
 	google.golang.org/genproto v0.0.0-20250106144421-5f5ef82da422 // indirect
 )
+
+replace github.com/Dmitriy-M1319/crystal-services/pkg/crystal-services/products/v1/ => ./pkg/crystal-services/products/v1
