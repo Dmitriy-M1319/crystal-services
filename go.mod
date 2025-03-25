@@ -42,3 +42,5 @@ require (
 	google.golang.org/genproto v0.0.0-20250106144421-5f5ef82da422 // indirect
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1 // indirect
 )
+
+replace github.com/Dmitriy-M1319/crystal-services/pkg/crystal-services/products/v1/ => ./pkg/crystal-services/products/v1
