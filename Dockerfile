@@ -1,25 +1,20 @@
-ARG GITHUB_PATH=github.com/Dmitriy-M1319/crystal-services
+FROM golang:1.23
 
-FROM golang:1.23-alpine AS builder
-RUN apk add --update make git protoc protobuf protobuf-dev curl
-COPY . /home/${GITHUB_PATH}
-WORKDIR /home/${GITHUB_PATH}
-RUN make deps && make build
+RUN apt-get -y update && apt-get install -y protobuf-compiler
 
-# gRPC Server
+WORKDIR /code
+COPY go.mod go.sum ./
+RUN go mod download
 
-FROM alpine:latest as server
-LABEL org.opencontainers.image.source https://${GITHUB_PATH}
-RUN apk --no-cache add ca-certificates
-WORKDIR /root/
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go
 
-COPY --from=builder /home/${GITHUB_PATH}/bin/grpc-server .
-COPY --from=builder /home/${GITHUB_PATH}/config.yaml .
-COPY --from=builder /home/${GITHUB_PATH}/migrations/ ./migrations
+COPY . .
 
-RUN chown root:root grpc-server
+EXPOSE 8082
+EXPOSE 8000
+EXPOSE 12201
 
-EXPOSE 50051
-EXPOSE 8080
-
-CMD ["./grpc-server"]
+CMD ["go", "run", "cmd/crystal-services/main.go"]

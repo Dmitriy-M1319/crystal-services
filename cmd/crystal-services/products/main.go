@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/Dmitriy-M1319/crystal-services/products-service/internal/config"
-	"github.com/Dmitriy-M1319/crystal-services/products-service/internal/products/db"
-	"github.com/Dmitriy-M1319/crystal-services/products-service/internal/products/server"
+	"github.com/Dmitriy-M1319/crystal-services/internal/config"
+	"github.com/Dmitriy-M1319/crystal-services/internal/products/db"
+	"github.com/Dmitriy-M1319/crystal-services/internal/products/server"
 	"github.com/pressly/goose/v3"
 	"github.com/rs/zerolog/log"
 )

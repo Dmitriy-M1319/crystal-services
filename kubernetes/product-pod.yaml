@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-pod
+  labels:
+    app: product-pod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-pod
+  template:
+    metadata:
+      name: product-pod
+      labels:
+        app: product-pod
+    spec:
+      containers:
+        - name: product-pod-container
+          image: xwisert/crystal-product-service:1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 60
+            httpGet:
+              path: /live
+              port: 8000
+              scheme: HTTP
+            timeoutSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+      restartPolicy: Always
+      

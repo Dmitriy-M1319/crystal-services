@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      name: mongo
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:4.2
+          resources:
+            limits:
+              memory: "1Gi"
+          volumeMounts:
+            - name: mongodb
+              mountPath: /data/db
+      volumes:
+        - name: mongodb
+          persistentVolumeClaim:
+            claimName: mongodb-pvc
+      restartPolicy: Always
+      
